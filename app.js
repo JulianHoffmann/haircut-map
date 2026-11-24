@@ -1,7 +1,7 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7.9.0/+esm";
 import * as topojson from "https://cdn.jsdelivr.net/npm/topojson-client@3.1.0/+esm";
 import { parseGallery, POST_API, POST_URL } from "./lib/gallery.js";
-import { buildModel } from "./lib/model.js";
+import { buildModel, normalise } from "./lib/model.js";
 
 const WORLD_URL = "https://cdn.jsdelivr.net/npm/world-atlas@2.0.2/countries-50m.json";
 const ANTARCTICA_ID = "010";
@@ -11,6 +11,10 @@ const SMALL_POLYGON_PX2 = 40;
 const MAX_ZOOM = 24;
 const PLACE_ZOOM_LIMIT = 12;
 const PHONE_WIDTH = 760;
+const DAY_S = 86400;
+const MAX_POST_LINKS = 3;
+// Without a same-day match, a post naming the place still counts if published this close to the hair cut.
+const TITLE_MATCH_WINDOW_S = 30 * DAY_S;
 
 const fullDate = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 const monthYear = new Intl.DateTimeFormat("en-GB", { month: "short", year: "numeric", timeZone: "UTC" });
@@ -63,6 +67,8 @@ const state = {
   lightbox: null,
   size: { width: 0, height: 0 },
   chrome: { top: 0, bottom: 0 },
+  posts: [],
+  postsByDay: new Map(),
   k: 1,
 };
 
@@ -74,12 +80,14 @@ main().catch((error) => {
 });
 
 async function main() {
-  const [world, config, overrides, feed] = await Promise.all([
+  const [world, config, overrides, feed, posts] = await Promise.all([
     fetchJson(WORLD_URL),
     fetchJson("data/places.json"),
     fetchJson("data/overrides.json"),
     loadPhotos(),
+    fetchJson("data/posts.json").catch(() => []),
   ]);
+  indexPosts(posts);
 
   state.features = topojson
     .feature(world, world.objects.countries)
@@ -89,7 +97,7 @@ async function main() {
   state.ownerByIso = new Map(state.model.places.filter((p) => p.iso && !p.bbox).map((p) => [p.iso, p]));
   state.spots = buildSpots(state.model.sessions);
   state.spotPlaces = new Set(state.spots.map((spot) => spot.place));
-  window.haircutMap = { model: state.model, source: feed.source };
+  window.haircutMap = { model: state.model, source: feed.source, postsFor: postsForSession };
 
   renderStats();
   renderSource(feed);
@@ -144,6 +152,40 @@ function makeLocator(features) {
     }
     return feature ? { iso: feature.id ?? null, name: feature.properties.name } : null;
   };
+}
+
+/* ---------- Jan's blog posts from the same trip ---------- */
+
+const isoDay = (ts) => new Date(ts * 1000).toISOString().slice(0, 10);
+
+function indexPosts(posts) {
+  state.posts = posts.map((post) => ({ ...post, key: ` ${normalise(post.title)} ` }));
+  for (const post of state.posts) {
+    for (const day of post.days) {
+      if (!state.postsByDay.has(day)) state.postsByDay.set(day, []);
+      state.postsByDay.get(day).push(post);
+    }
+  }
+}
+
+// Posts with photos taken the day before, during or after the hair cut; failing that, posts
+// whose title names the town or country, published close to it (or at any time if undated).
+function postsForSession(session) {
+  if (session.start && !session.datePrecision) {
+    const photoDays = new Map();
+    for (let t = session.start - DAY_S; t <= session.end + DAY_S; t += DAY_S) {
+      for (const post of state.postsByDay.get(isoDay(t)) ?? []) photoDays.set(post, (photoDays.get(post) ?? 0) + 1);
+    }
+    if (photoDays.size) {
+      return [...photoDays.keys()]
+        .sort((a, b) => photoDays.get(b) - photoDays.get(a) || a.published.localeCompare(b.published))
+        .slice(0, MAX_POST_LINKS);
+    }
+  }
+  const names = [session.city, session.place.name].filter(Boolean).map((name) => ` ${normalise(name)} `);
+  const near = (post) =>
+    !session.start || Math.abs(Date.parse(post.published) / 1000 - session.start) <= TITLE_MATCH_WINDOW_S;
+  return state.posts.filter((post) => names.some((name) => post.key.includes(name)) && near(post)).slice(0, MAX_POST_LINKS);
 }
 
 function buildSpots(sessions) {
@@ -528,6 +570,16 @@ function photoGrid(group, title) {
   );
 }
 
+function postLinks(session) {
+  const posts = postsForSession(session);
+  if (!posts.length) return null;
+  const links = posts.flatMap((post, index) => [
+    index ? " · " : "",
+    el("a", { href: post.url, target: "_blank", rel: "noopener", text: post.title }),
+  ]);
+  return el("p", { class: "session-posts" }, "On the blog: ", ...links);
+}
+
 function openPlace(place, focusSessionId = null) {
   stopPlaying();
   hideTooltip();
@@ -547,6 +599,7 @@ function openPlace(place, focusSessionId = null) {
           { class: focused ? "session is-focused" : "session", id: `session-${session.id}` },
           el("h3", {}, el("span", { text: session.city ?? place.name }), el("span", { text: sessionDate(session) })),
           session.source ? el("p", { class: "session-source", text: session.source }) : null,
+          postLinks(session),
           photoGrid(session, sessionLabel(session)),
         );
       }),

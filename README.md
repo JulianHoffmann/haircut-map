@@ -32,6 +32,9 @@ python -m http.server 8130
 
 Then open http://localhost:8130. Refresh the offline copy with `npm run snapshot` (Node 18+).
 
+Each hair cut links to Jan's blog posts with photos from the same days, from `data/posts.json`.
+Refresh that index after he publishes new trips with `npm run posts`.
+
 ## Privacy
 
 GPS positions are rounded to three decimals when read and to one decimal (about 10 km) for
