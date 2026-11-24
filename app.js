@@ -619,10 +619,12 @@ function openList(scrollToUnplaced = false) {
   if (scrollToUnplaced) byId("unplaced-heading")?.scrollIntoView({ block: "start" });
 }
 
+// Undated groups are named by their files: the WordPress folder month is not when they were taken.
 function unplacedLabel(group) {
   if (group.start) return `Taken ${dateText(group.start)}`;
-  if (group.uploadMonth) return `Uploaded ${monthYear.format(Date.parse(`${group.uploadMonth}-01T00:00:00Z`))}`;
-  return "Undated";
+  const names = group.photos.map((photo) => photo.title.replace(/_singular_display_fullPicture$/i, ""));
+  const more = names.length > 2 ? ` + ${names.length - 2} more` : "";
+  return `Undated · ${names.slice(0, 2).join(", ")}${more}`;
 }
 
 function openUnplaced(group) {
