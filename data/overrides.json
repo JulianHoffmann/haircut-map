@@ -1,6 +1,7 @@
 {
   "about": "Manual corrections. 'photos' maps a WordPress attachment id to a place name or city, written as you would write it in a caption, or to { place, source } where source explains the evidence and is shown on the map. One photo is enough to place its whole session. 'exclude' lists attachment ids to hide. The entries below were inferred by matching camera timestamps with Jan's own blog posts of the same day. Overrides win over captions, so remove an entry once Jan has captioned that photo himself.",
   "photos": {
+    "12405": { "place": "Horneburg", "source": "Confirmed by Jan" },
     "12423": { "place": "Delhi", "source": "Inferred: same-day photos in Jan's post \"Delhi\"" },
     "12445": { "place": "Kampala", "source": "Inferred: same-day photos in Jan's posts \"Kampala\" and \"Port Bell\"" },
     "12357": { "place": "Dhaka", "source": "Inferred: same-day photos in Jan's post \"Dhaka city\"" },
