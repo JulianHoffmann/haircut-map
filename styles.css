@@ -1,4 +1,4 @@
-/* Light and dark are both designed; dark values live under the OS query and data-theme. */
+/* Light only, by request: the page ignores the OS dark-mode setting. */
 
 :root {
   color-scheme: light;
@@ -45,72 +45,6 @@
   --panel-width: min(384px, 40vw);
   --chrome-top: 132px;
   --chrome-bottom: 128px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:where(:not([data-theme="light"])) {
-    color-scheme: dark;
-    --backdrop: #000000;
-    --ocean-centre: #121215;
-    --ocean-edge: #060607;
-    --graticule: rgba(235, 235, 245, 0.06);
-    --land: #2b2b30;
-    --land-hover: #37373d;
-    --border: #0c0c0e;
-    --visited: #11519f;
-    --visited-hover: #1866c6;
-    --selected: #0a84ff;
-    --spot: #eaf3ff;
-    --spot-ring: #0c0c0e;
-    --ring: #409cff;
-    --label: #f5f5f7;
-    --label-2: #a1a1a6;
-    --label-3: #8e8e93;
-    --accent: #0a84ff;
-    --separator: rgba(84, 84, 88, 0.5);
-    --fill: rgba(120, 120, 128, 0.26);
-    --fill-quiet: rgba(120, 120, 128, 0.14);
-    --bar: #1d5fb3;
-    --bar-current: #0a84ff;
-    --bar-future: rgba(120, 120, 128, 0.26);
-    --glass: rgba(30, 30, 33, 0.56);
-    --glass-solid: rgba(30, 30, 33, 0.94);
-    --glass-line: rgba(255, 255, 255, 0.08);
-    --glass-highlight: rgba(255, 255, 255, 0.09);
-    --shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 14px 44px rgba(0, 0, 0, 0.55);
-  }
-}
-
-:root[data-theme="dark"] {
-  color-scheme: dark;
-  --backdrop: #000000;
-  --ocean-centre: #121215;
-  --ocean-edge: #060607;
-  --graticule: rgba(235, 235, 245, 0.06);
-  --land: #2b2b30;
-  --land-hover: #37373d;
-  --border: #0c0c0e;
-  --visited: #11519f;
-  --visited-hover: #1866c6;
-  --selected: #0a84ff;
-  --spot: #eaf3ff;
-  --spot-ring: #0c0c0e;
-  --ring: #409cff;
-  --label: #f5f5f7;
-  --label-2: #a1a1a6;
-  --label-3: #8e8e93;
-  --accent: #0a84ff;
-  --separator: rgba(84, 84, 88, 0.5);
-  --fill: rgba(120, 120, 128, 0.26);
-  --fill-quiet: rgba(120, 120, 128, 0.14);
-  --bar: #1d5fb3;
-  --bar-current: #0a84ff;
-  --bar-future: rgba(120, 120, 128, 0.26);
-  --glass: rgba(30, 30, 33, 0.56);
-  --glass-solid: rgba(30, 30, 33, 0.94);
-  --glass-line: rgba(255, 255, 255, 0.08);
-  --glass-highlight: rgba(255, 255, 255, 0.09);
-  --shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 14px 44px rgba(0, 0, 0, 0.55);
 }
 
 *,
