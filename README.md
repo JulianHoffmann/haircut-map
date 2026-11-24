@@ -10,9 +10,12 @@ On every page load the map reads the post's gallery live from the WordPress.com 
 
 Each set of photos taken within three hours counts as one hair cut. Its place comes from, in order:
 
-1. `data/overrides.json` (manual fixes by attachment id),
+1. `data/overrides.json` (manual fixes by attachment id; `{ "place", "source" }` shows the evidence on the map),
 2. a caption, alt text or description naming a city or country in `data/places.json`,
 3. the photo's GPS position.
+
+Photos without EXIF get their date from the file name where it has one (`2013-06-25+16.24.54`,
+`20191204_175125`). Undated photos join the dated visit to the same place when there is only one.
 
 **Adding a hair cut (Jan):** upload the photos to the post as usual and write the town or
 country as the caption of one of them. Nothing else to do. If the town is not yet known to the

@@ -1,5 +1,21 @@
 {
-  "about": "Manual corrections. 'photos' maps a WordPress attachment id to a place name or city (as you would write it in a caption); one photo is enough to place its whole session. 'exclude' lists attachment ids to hide.",
-  "photos": {},
+  "about": "Manual corrections. 'photos' maps a WordPress attachment id to a place name or city, written as you would write it in a caption, or to { place, source } where source explains the evidence and is shown on the map. One photo is enough to place its whole session. 'exclude' lists attachment ids to hide. The entries below were inferred by matching camera timestamps with Jan's own blog posts of the same day. Overrides win over captions, so remove an entry once Jan has captioned that photo himself.",
+  "photos": {
+    "12423": { "place": "Delhi", "source": "Inferred: same-day photos in Jan's post \"Delhi\"" },
+    "12445": { "place": "Kampala", "source": "Inferred: same-day photos in Jan's posts \"Kampala\" and \"Port Bell\"" },
+    "12357": { "place": "Dhaka", "source": "Inferred: same-day photos in Jan's post \"Dhaka city\"" },
+    "12425": { "place": "Accra", "source": "Inferred: same-day photos in Jan's posts \"Accra\" and \"Tema\"" },
+    "12428": { "place": "Accra", "source": "Inferred: file number JHG_4725 sits inside the JHG_4696–4736 series of 23 Feb 2013" },
+    "12479": { "place": "Libreville", "source": "Inferred: same-day photos in Jan's post \"Libreville\"" },
+    "12500": { "place": "Cotonou", "source": "Inferred: same-day photos in Jan's post \"Cotonou city\"" },
+    "12360": { "place": "Addis Ababa", "source": "Inferred: photos of the same days in Jan's post \"Addis Ababa\"" },
+    "12446": { "place": "Swaziland", "source": "Inferred: same-day photos in Jan's post \"Swaziland\"" },
+    "14164": { "place": "Panama City", "source": "Inferred: same-day photos in Jan's posts \"Panama City\" and \"The Panama Canal and ports, Balboa\"" },
+    "15755": { "place": "Santurce", "source": "Inferred: same-day photos in Jan's post \"Santurce, the port of Bilbao\"" },
+    "15764": { "place": "Pandan", "source": "Inferred: same-day photos in Jan's post \"People of Pandan, Antique, Philippines\"" },
+    "15773": { "place": "Bali", "source": "Inferred: same-day photos in Jan's posts \"Encounters in Bali\" and \"Port of Benoa\"" },
+    "22197": { "place": "Zanzibar", "source": "Inferred: same-day photos in Jan's post \"Zanzibar\"" },
+    "22601": { "place": "Washington", "source": "Inferred: photo titled \"Alex in DC\", two days after Jan's post \"The port of Virginia\"" }
+  },
   "exclude": []
 }

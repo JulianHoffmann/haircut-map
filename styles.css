@@ -386,6 +386,13 @@ h1 {
   transition: opacity 240ms var(--ease);
 }
 
+/* On the bright selection fill a dark dot disappears, so invert it. */
+.spot.is-selected .spot-mark {
+  fill: #ffffff;
+  stroke: #003a94;
+  stroke-width: 2px;
+}
+
 .spot.is-past .spot-mark {
   opacity: 0.35;
 }
@@ -599,6 +606,12 @@ h1 {
   font-weight: 400;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
+}
+
+.session-source {
+  margin: -4px 0 10px;
+  color: var(--label-3);
+  font-size: 12px;
 }
 
 .session.is-focused h3 span:first-child {

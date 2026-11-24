@@ -385,6 +385,7 @@ function applyFilter() {
   map.spots
     .selectAll("g.spot")
     .attr("display", (spot) => (spotVisible(spot) ? null : "none"))
+    .classed("is-selected", (spot) => spot.place === state.selected)
     .classed(
       "is-past",
       (spot) => state.year !== null && !spot.sessions.some((s) => s.start && yearOf(s.start) === state.year),
@@ -538,6 +539,7 @@ function openPlace(place, focusSessionId = null) {
           "section",
           { class: focused ? "session is-focused" : "session", id: `session-${session.id}` },
           el("h3", {}, el("span", { text: session.city ?? place.name }), el("span", { text: dateText(session.start) })),
+          session.source ? el("p", { class: "session-source", text: session.source }) : null,
           photoGrid(session, sessionLabel(session)),
         );
       }),
