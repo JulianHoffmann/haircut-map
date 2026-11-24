@@ -1,0 +1,9 @@
+{
+  "name": "haircut-map",
+  "private": true,
+  "type": "module",
+  "description": "Interactive map of Jan Hoffmann's hair cuts around the world",
+  "scripts": {
+    "snapshot": "node scripts/snapshot.mjs"
+  }
+}

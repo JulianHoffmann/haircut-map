@@ -1,0 +1,5 @@
+{
+  "about": "Manual corrections. 'photos' maps a WordPress attachment id to a place name or city (as you would write it in a caption); one photo is enough to place its whole session. 'exclude' lists attachment ids to hide.",
+  "photos": {},
+  "exclude": []
+}

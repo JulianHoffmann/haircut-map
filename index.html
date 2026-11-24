@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f5f7" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+  <title>Hair Cuts around the World</title>
+  <meta name="description" content="Jan Hoffmann's empirical study of hair cuts in more than ninety countries and territories, mapped with the photographic evidence.">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <div class="app">
+    <main class="stage" id="stage">
+      <svg class="map" id="map" role="img" aria-labelledby="map-label">
+        <title id="map-label">World map of the countries and territories where Jan Hoffmann had a hair cut</title>
+        <defs>
+          <radialGradient id="ocean-gradient" cx="50%" cy="42%" r="70%">
+            <stop offset="0%" class="ocean-centre"/>
+            <stop offset="100%" class="ocean-edge"/>
+          </radialGradient>
+        </defs>
+      </svg>
+      <p class="map-message" id="map-message">Loading the evidence…</p>
+      <div class="tooltip glass" id="tooltip" role="tooltip" hidden></div>
+      <aside class="panel glass" id="panel" hidden aria-labelledby="panel-title">
+        <div class="panel-head">
+          <div>
+            <p class="eyebrow" id="panel-eyebrow"></p>
+            <h2 id="panel-title"></h2>
+            <p class="panel-meta" id="panel-meta"></p>
+          </div>
+          <button class="close-button" id="panel-close" type="button" aria-label="Close panel">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg>
+          </button>
+        </div>
+        <div class="panel-body" id="panel-body"></div>
+      </aside>
+    </main>
+
+    <header class="masthead" id="masthead">
+      <div class="brand glass">
+        <h1>Hair Cuts around the World</h1>
+        <p class="subtitle">
+          An empirical study into GATT and GATS by
+          <a href="https://janhoffmann.live/2026/04/28/hair-cuts/" target="_blank" rel="noopener">Jan Hoffmann</a>
+        </p>
+        <dl class="stats" id="stats" aria-live="polite"></dl>
+      </div>
+      <button class="list-button glass" id="list-toggle" type="button" aria-controls="panel" aria-expanded="false">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5.5 4h8M5.5 8h8M5.5 12h8"/><circle cx="2.6" cy="4" r=".9"/><circle cx="2.6" cy="8" r=".9"/><circle cx="2.6" cy="12" r=".9"/></svg>
+        <span>All places</span>
+      </button>
+    </header>
+
+    <div class="zoom-controls glass" id="zoom-controls" role="group" aria-label="Zoom">
+      <button id="zoom-in" type="button" aria-label="Zoom in">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 3v10M3 8h10"/></svg>
+      </button>
+      <button id="zoom-out" type="button" aria-label="Zoom out">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10"/></svg>
+      </button>
+      <button id="zoom-reset" type="button" aria-label="Show the whole world">
+        <svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6"/><path d="M2 8h12M8 2c-2.1 2.3-2.1 9.7 0 12M8 2c2.1 2.3 2.1 9.7 0 12"/></svg>
+      </button>
+    </div>
+
+    <footer class="timeline glass" id="timeline">
+      <div class="timeline-controls">
+        <button class="play-button" id="play" type="button" aria-pressed="false" aria-label="Play the years">
+          <svg class="icon-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3.2v9.6c0 .5.5.8.9.5l7.2-4.8a.6.6 0 0 0 0-1L5.9 2.7c-.4-.3-.9 0-.9.5z"/></svg>
+          <svg class="icon-pause" viewBox="0 0 16 16" aria-hidden="true"><rect x="4" y="3" width="2.6" height="10" rx=".8"/><rect x="9.4" y="3" width="2.6" height="10" rx=".8"/></svg>
+        </button>
+        <button class="chip" id="all-years" type="button" aria-pressed="true">All years</button>
+        <p class="timeline-status" id="timeline-status" aria-live="polite"></p>
+      </div>
+      <div class="years" id="years" role="group" aria-label="Hair cuts per year"></div>
+      <p class="source" id="source"></p>
+    </footer>
+  </div>
+
+  <div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-labelledby="lightbox-caption">
+    <button class="lightbox-button lightbox-close" id="lightbox-close" type="button" aria-label="Close photo">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M4.5 4.5l7 7M11.5 4.5l-7 7"/></svg>
+    </button>
+    <button class="lightbox-button lightbox-prev" id="lightbox-prev" type="button" aria-label="Previous photo">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M10 3L5 8l5 5"/></svg>
+    </button>
+    <figure>
+      <img id="lightbox-image" alt="">
+      <figcaption id="lightbox-caption"></figcaption>
+    </figure>
+    <button class="lightbox-button lightbox-next" id="lightbox-next" type="button" aria-label="Next photo">
+      <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M6 3l5 5-5 5"/></svg>
+    </button>
+  </div>
+
+  <noscript><p class="noscript">This map needs JavaScript. The full study is on <a href="https://janhoffmann.live/2026/04/28/hair-cuts/">janhoffmann.live</a>.</p></noscript>
+</body>
+</html>
