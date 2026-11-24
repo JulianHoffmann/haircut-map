@@ -1,10 +1,10 @@
 {
-  "about": "Manual corrections. 'photos' maps a WordPress attachment id to a place name or city, written as you would write it in a caption, or to { place, source } where source explains the evidence and is shown on the map. For an undated photo, 'join' names another photo whose visit it belongs to. One photo is enough to place its whole session. 'exclude' lists attachment ids to hide. The entries below were inferred by matching camera timestamps with Jan's own blog posts of the same day. Overrides win over captions, so remove an entry once Jan has captioned that photo himself.",
+  "about": "Manual corrections. 'photos' maps a WordPress attachment id to a place name or city, written as you would write it in a caption, or to { place, source } where source explains the evidence and is shown on the map. For an undated photo, 'join' names another photo whose visit it belongs to, and 'date' (YYYY-MM or YYYY) gives the month or year when only that is known. One photo is enough to place its whole session. 'exclude' lists attachment ids to hide. The entries below were inferred by matching camera timestamps with Jan's own blog posts of the same day. Overrides win over captions, so remove an entry once Jan has captioned that photo himself.",
   "photos": {
     "12405": { "place": "Horneburg", "source": "Confirmed by Jan" },
-    "21181": { "place": "Belize", "source": "Confirmed by Jan" },
-    "21182": { "place": "Belize", "source": "Confirmed by Jan" },
-    "21183": { "place": "Belize", "source": "Confirmed by Jan" },
+    "21181": { "place": "Belize", "date": "2025-12", "source": "Confirmed by Jan" },
+    "21182": { "place": "Belize", "date": "2025-12", "source": "Confirmed by Jan" },
+    "21183": { "place": "Belize", "date": "2025-12", "source": "Confirmed by Jan" },
     "12389": { "place": "Horneburg", "join": "12385", "source": "Inferred from the photo: same red shirt and long hair as the Horneburg photos from the same camera" },
     "12388": { "place": "Lahore", "source": "Inferred from the photo: same barber as in the Lahore photos of 5 Mar 2011" },
     "12423": { "place": "Delhi", "source": "Inferred: same-day photos in Jan's post \"Delhi\"" },

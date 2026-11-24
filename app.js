@@ -183,6 +183,13 @@ const dateText = (ts) => (ts ? fullDate.format(ts * 1000) : "Date unknown");
 const thumbUrl = (photo) => `${photo.url}?w=240&h=240&crop=1&strip=info`;
 const largeUrl = (photo) => `${photo.url}?w=1600&strip=info`;
 
+function sessionDate(session) {
+  if (!session.start) return "Date unknown";
+  if (session.datePrecision === "month") return monthYear.format(session.start * 1000);
+  if (session.datePrecision === "year") return String(yearOf(session.start));
+  return dateText(session.start);
+}
+
 function sessionLabel(session) {
   return session.city ? `${session.city}, ${session.place.name}` : session.place.name;
 }
@@ -468,7 +475,7 @@ function showSpotTooltip(event, spot) {
   const photos = d3.sum(spot.sessions, (session) => session.photos.length);
   let detail;
   if (spot.sessions.length === 1) {
-    detail = `${dateText(spot.sessions[0].start)} · ${plural(photos, "photo")}`;
+    detail = `${sessionDate(spot.sessions[0])} · ${plural(photos, "photo")}`;
   } else {
     const years = spot.sessions.filter((s) => s.start).map((s) => yearOf(s.start));
     const span = years.length ? ` · ${d3.min(years)}–${d3.max(years)}` : "";
@@ -538,7 +545,7 @@ function openPlace(place, focusSessionId = null) {
         return el(
           "section",
           { class: focused ? "session is-focused" : "session", id: `session-${session.id}` },
-          el("h3", {}, el("span", { text: session.city ?? place.name }), el("span", { text: dateText(session.start) })),
+          el("h3", {}, el("span", { text: session.city ?? place.name }), el("span", { text: sessionDate(session) })),
           session.source ? el("p", { class: "session-source", text: session.source }) : null,
           photoGrid(session, sessionLabel(session)),
         );
@@ -654,7 +661,7 @@ function showLightboxPhoto() {
   const count = group.photos.length;
   els.lightboxImage.src = largeUrl(photo);
   els.lightboxImage.alt = `Hair cut photo ${index + 1} of ${count}: ${title}`;
-  const date = group.start !== undefined && group.place ? ` · ${dateText(group.start)}` : "";
+  const date = group.start !== undefined && group.place ? ` · ${sessionDate(group)}` : "";
   els.lightboxCaption.replaceChildren(
     `${title}${date} · ${index + 1} / ${count}`,
     el("a", { href: photo.permalink ?? POST_URL, target: "_blank", rel: "noopener", text: "View on janhoffmann.live" }),
