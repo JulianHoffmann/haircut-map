@@ -139,6 +139,7 @@
     "Pandan": { "place": "Philippines", "lat": 11.72, "lon": 122.1 },
     "Bali": { "place": "Indonesia", "lat": -8.65, "lon": 115.22 },
     "Tehran": { "place": "Iran", "lat": 35.69, "lon": 51.39 },
+    "Istanbul": { "place": "Türkiye", "lat": 41.01, "lon": 28.98 },
     "Medellín": { "place": "Colombia", "lat": 6.24, "lon": -75.58 },
     "Gaborone": { "place": "Botswana", "lat": -24.65, "lon": 25.91 },
     "Delhi": { "place": "India", "lat": 28.61, "lon": 77.21 },
