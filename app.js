@@ -69,6 +69,7 @@ const state = {
   chrome: { top: 0, bottom: 0 },
   posts: [],
   postsByDay: new Map(),
+  extraCount: 0,
   k: 1,
 };
 
@@ -80,20 +81,22 @@ main().catch((error) => {
 });
 
 async function main() {
-  const [world, config, overrides, feed, posts] = await Promise.all([
+  const [world, config, overrides, feed, posts, extras] = await Promise.all([
     fetchJson(WORLD_URL),
     fetchJson("data/places.json"),
     fetchJson("data/overrides.json"),
     loadPhotos(),
     fetchJson("data/posts.json").catch(() => []),
+    fetchJson("data/extra-photos.json").catch(() => []),
   ]);
   indexPosts(posts);
+  const photos = addExtraPhotos(feed.photos, extras, overrides);
 
   state.features = topojson
     .feature(world, world.objects.countries)
     .features.filter((feature) => feature.id !== ANTARCTICA_ID);
   state.featureByIso = new Map(state.features.filter((f) => f.id).map((f) => [f.id, f]));
-  state.model = buildModel({ photos: feed.photos, config, overrides, locate: makeLocator(state.features) });
+  state.model = buildModel({ photos, config, overrides, locate: makeLocator(state.features) });
   state.ownerByIso = new Map(state.model.places.filter((p) => p.iso && !p.bbox).map((p) => [p.iso, p]));
   state.spots = buildSpots(state.model.sessions);
   state.spotPlaces = new Set(state.spots.map((spot) => spot.place));
@@ -125,6 +128,25 @@ async function loadPhotos() {
     const snapshot = await fetchJson("data/snapshot.json");
     return { source: "snapshot", modified: snapshot.modified, photos: snapshot.photos };
   }
+}
+
+// Photos from Jan's archive that are not (yet) in the blog gallery, kept in the repo. Once he
+// uploads the same file, the gallery copy wins and inherits the archive photo's place.
+function addExtraPhotos(galleryPhotos, extras, overrides) {
+  const stem = (name) => name.split("/").pop().replace(/(-\d+)?\.\w+$/, "").toLowerCase();
+  const galleryByStem = new Map(galleryPhotos.map((photo) => [stem(photo.path), photo]));
+  const added = [];
+  for (const extra of extras) {
+    const uploaded = galleryByStem.get(stem(extra.path));
+    if (uploaded) {
+      const placement = overrides.photos?.[extra.id];
+      if (placement && !overrides.photos[uploaded.id]) overrides.photos[uploaded.id] = placement;
+    } else {
+      added.push({ ...extra, order: galleryPhotos.length + added.length });
+    }
+  }
+  state.extraCount = added.length;
+  return [...galleryPhotos, ...added];
 }
 
 function makeLocator(features) {
@@ -222,8 +244,8 @@ function plural(count, word, pluralWord = `${word}s`) {
 
 const yearOf = (ts) => new Date(ts * 1000).getUTCFullYear();
 const dateText = (ts) => (ts ? fullDate.format(ts * 1000) : "Date unknown");
-const thumbUrl = (photo) => `${photo.url}?w=240&h=240&crop=1&strip=info`;
-const largeUrl = (photo) => `${photo.url}?w=1600&strip=info`;
+const thumbUrl = (photo) => (photo.extra ? photo.thumb : `${photo.url}?w=240&h=240&crop=1&strip=info`);
+const largeUrl = (photo) => (photo.extra ? photo.url : `${photo.url}?w=1600&strip=info`);
 
 function sessionDate(session) {
   if (!session.start) return "Date unknown";
@@ -276,6 +298,7 @@ function renderSource(feed) {
   const link = el("a", { href: POST_URL, target: "_blank", rel: "noopener", text: "janhoffmann.live" });
   const lead = feed.source === "live" ? "Photos and captions read live from " : "Live feed unavailable — showing a saved copy of ";
   const parts = [lead, link, ` (post updated ${updated}).`];
+  if (state.extraCount) parts.push(` Plus ${plural(state.extraCount, "photo")} from Jan's archive.`);
   const { unplacedPhotos } = state.model.stats;
   if (unplacedPhotos) {
     parts.push(" ", el("button", { type: "button", text: `${unplacedPhotos} photos not yet placed`, onclick: () => openList(true) }));
@@ -715,10 +738,11 @@ function showLightboxPhoto() {
   els.lightboxImage.src = largeUrl(photo);
   els.lightboxImage.alt = `Hair cut photo ${index + 1} of ${count}: ${title}`;
   const date = group.start !== undefined && group.place ? ` · ${sessionDate(group)}` : "";
-  els.lightboxCaption.replaceChildren(
-    `${title}${date} · ${index + 1} / ${count}`,
-    el("a", { href: photo.permalink ?? POST_URL, target: "_blank", rel: "noopener", text: "View on janhoffmann.live" }),
-  );
+  const caption = [`${title}${date} · ${index + 1} / ${count}`];
+  if (!photo.extra) {
+    caption.push(el("a", { href: photo.permalink ?? POST_URL, target: "_blank", rel: "noopener", text: "View on janhoffmann.live" }));
+  }
+  els.lightboxCaption.replaceChildren(...caption);
   els.lightboxPrev.hidden = count < 2;
   els.lightboxNext.hidden = count < 2;
   if (count > 1) new Image().src = largeUrl(group.photos[(index + 1) % count]);

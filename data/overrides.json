@@ -43,7 +43,16 @@
     "15764": { "place": "Pandan", "source": "Inferred: same-day photos in Jan's post \"People of Pandan, Antique, Philippines\"" },
     "15773": { "place": "Bali", "source": "Inferred: same-day photos in Jan's posts \"Encounters in Bali\" and \"Port of Benoa\"" },
     "22197": { "place": "Zanzibar", "source": "Confirmed by Jan" },
-    "22601": { "place": "Washington", "source": "Inferred: photo titled \"Alex in DC\", two days after Jan's post \"The port of Virginia\"" }
+    "22601": { "place": "Washington", "source": "Inferred: photo titled \"Alex in DC\", two days after Jan's post \"The port of Virginia\"" },
+    "extra-abuja-jhn_7769": { "place": "Abuja", "source": "From Jan's photo archive (not in the blog gallery)" },
+    "extra-abuja-jhn_7771": { "place": "Abuja", "source": "From Jan's photo archive (not in the blog gallery)" },
+    "extra-abuja-jhn_7775": { "place": "Abuja", "source": "From Jan's photo archive (not in the blog gallery)" },
+    "extra-abuja-jhn_7788": { "place": "Abuja", "source": "From Jan's photo archive (not in the blog gallery)" },
+    "extra-abuja-jhn_7795": { "place": "Abuja", "source": "From Jan's photo archive (not in the blog gallery)" },
+    "extra-abuja-jhn_7798": { "place": "Abuja", "source": "From Jan's photo archive (not in the blog gallery)" },
+    "extra-abuja-jhn_7802": { "place": "Abuja", "source": "From Jan's photo archive (not in the blog gallery)" },
+    "extra-abuja-jhn_7804": { "place": "Abuja", "source": "From Jan's photo archive (not in the blog gallery)" },
+    "extra-abuja-jhn_7805": { "place": "Abuja", "source": "From Jan's photo archive (not in the blog gallery)" }
   },
   "exclude": []
 }

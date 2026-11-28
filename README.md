@@ -21,6 +21,15 @@ Photos without EXIF get their date from the file name where it has one (`2013-06
 country as the caption of one of them. Nothing else to do. If the town is not yet known to the
 map, write `Town, Country` and the country is enough.
 
+**Adding photos that are not on the blog** (e.g. Lightroom exports):
+
+```powershell
+python scripts/add_extra_photos.py "C:\path\to\folder" "Abuja"
+```
+
+The photos are resized into `photos/` and listed in `data/extra-photos.json`. If Jan later uploads
+the same files (same file names) to his post, the map shows his copies instead and keeps the place.
+
 **Adding a country to the list:** add an entry to `places` in `data/places.json`
 (`iso` = ISO 3166-1 numeric code; `lat`/`lon` = where its marker sits).
 
