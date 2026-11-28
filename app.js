@@ -610,7 +610,10 @@ function openPlace(place, focusSessionId = null) {
   state.panelMode = "place";
 
   const eyebrow = place.inList ? "Country or territory" : "From the photos · not on the published list";
-  const first = place.firstTs ? ` · first ${monthYear.format(place.firstTs * 1000)}` : "";
+  const firstSession = place.sessions.find((session) => session.start);
+  const firstWhen =
+    firstSession?.datePrecision === "year" ? String(yearOf(firstSession.start)) : monthYear.format(place.firstTs * 1000);
+  const first = firstSession ? ` · first ${firstWhen}` : "";
   setPanelHeader(eyebrow, place.name, place.sessions.length ? `${describePlace(place)}${first}` : describePlace(place));
 
   if (place.sessions.length) {
@@ -783,11 +786,15 @@ function renderTimeline() {
   const counts = d3.rollup(dated, (sessions) => sessions.length, (session) => yearOf(session.start));
   const max = d3.max(counts.values()) ?? 1;
   state.years = d3.range(firstYear, lastYear + 1);
+  // Play only steps through years with a hair cut, so the gap after 1983 does not stall it.
+  state.playYears = state.years.filter((year) => counts.has(year));
 
   els.years.replaceChildren(
     ...state.years.map((year) => {
       const count = counts.get(year) ?? 0;
-      const labelled = year === firstYear || year === lastYear || year % 5 === 0;
+      // First and last years are always labelled; round years too close to them would collide.
+      const nearEnd = Math.min(Math.abs(year - firstYear), Math.abs(year - lastYear)) <= 2;
+      const labelled = year === firstYear || year === lastYear || (year % 5 === 0 && !nearEnd);
       const description = `${year}: ${plural(count, "hair cut")}`;
       return el(
         "button",
@@ -840,8 +847,9 @@ function updateTimeline() {
 }
 
 function startPlaying() {
-  const years = state.years;
-  let index = state.year === null || state.year === years.at(-1) ? 0 : years.indexOf(state.year) + 1;
+  const years = state.playYears;
+  const next = years.findIndex((year) => state.year !== null && year > state.year);
+  let index = next === -1 ? 0 : next;
   closePanel();
   resetZoom();
   const step = () => {
